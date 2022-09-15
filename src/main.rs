@@ -84,4 +84,5 @@ async fn main() -> bluer::Result<()> {
             else => break
         }
     }
+    Ok(())
 }
