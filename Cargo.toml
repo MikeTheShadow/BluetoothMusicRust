@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-bluer = "0.15.0"
+bluer = {version="0.15.0", features=["full"]}

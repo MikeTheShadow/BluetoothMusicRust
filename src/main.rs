@@ -4,7 +4,6 @@ use std::{collections::HashSet, env};
 
 async fn query_device(adapter: &Adapter, addr: Address) -> bluer::Result<()> {
     let device = adapter.device(addr)?;
-    println!("    Address type:       {}", device.address_type().await?);
     println!("    Name:               {:?}", device.name().await?);
     println!("    Icon:               {:?}", device.icon().await?);
     println!("    Class:              {:?}", device.class().await?);
@@ -38,7 +37,7 @@ async fn main() -> bluer::Result<()> {
     env_logger::init();
     let session = bluer::Session::new().await?;
     let adapter = session.default_adapter().await?;
-    println!("Discovering devices using Bluetooth adapater {}\n", adapter.name());
+    println!("Discovering devices using Bluetooth adapter {}\n", adapter.name());
     adapter.set_powered(true).await?;
 
     let device_events = adapter.discover_devices().await?;
@@ -85,6 +84,4 @@ async fn main() -> bluer::Result<()> {
             else => break
         }
     }
-
-    Ok(())
 }
