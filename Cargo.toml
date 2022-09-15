@@ -1,0 +1,7 @@
+[package]
+name = "BluetoothMusicRust"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bluer = "0.15.0"
