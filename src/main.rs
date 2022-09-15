@@ -2,7 +2,7 @@ use bluer::{Adapter, AdapterEvent, Address, DeviceEvent};
 use futures::{pin_mut, stream::SelectAll, StreamExt};
 use std::{collections::HashSet, env};
 
-async fn query_device(adapter: &Adapter, addr: Address) -> bluer::Result<()> {
+async fn query_device(adapter: &Adapter, addr: Address) -> Result<(), bluer::Error> {
     let device = adapter.device(addr)?;
     println!("    Name:               {:?}", device.name().await?);
     println!("    Icon:               {:?}", device.icon().await?);
