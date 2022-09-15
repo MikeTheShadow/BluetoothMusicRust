@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 bluer = {version= "0.15.0", features=["full"]}
+futures = { version = "0.3.24", default-features = true }
