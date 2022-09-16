@@ -7,13 +7,14 @@ use tokio::{
     io::{AsyncBufReadExt, BufReader},
     time::sleep,
 };
+use bluer::Result;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> bluer::Result<()> {
     env_logger::init();
     let session = bluer::Session::new().await?;
     let adapter = session.default_adapter().await?;
-    let test_adapter : Result<Adapter, E> = session.adapter("music-server-controller").await;
+    let test_adapter : Result<Adapter> = session.adapter("music-server-controller").await;
     if test_adapter.is_ok() {
         println!("Found it by name!");
     } else {
