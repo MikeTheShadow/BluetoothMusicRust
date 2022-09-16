@@ -19,7 +19,7 @@ async fn main() -> bluer::Result<()> {
     println!("Advertising on Bluetooth adapter {} with address {}", adapter.name(), adapter.address().await?);
     let le_advertisement = Advertisement {
         advertisement_type: bluer::adv::Type::Peripheral,
-        service_uuids: vec!["123e4567-e89b-12d3-a456-426614174000".parse().unwrap()].into_iter().collect(),
+        service_uuids: vec!["00001108-0000-1000-8000-00805f9b34fb".parse().unwrap(),"0000110d-0000-1000-8000-00805f9b34fb".parse().unwrap()].into_iter().collect(),
         discoverable: Some(true),
         local_name: Some("Music Server Phone".to_string()),
         ..Default::default()
