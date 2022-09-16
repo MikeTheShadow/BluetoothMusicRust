@@ -3,16 +3,6 @@
 version = 3
 
 [[package]]
-name = "BluetoothMusicRust"
-version = "0.1.0"
-dependencies = [
- "bluer",
- "env_logger",
- "futures",
- "tokio",
-]
-
-[[package]]
 name = "aho-corasick"
 version = "0.7.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -70,6 +60,16 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "uuid",
+]
+
+[[package]]
+name = "bluetooth_music_rust"
+version = "0.1.0"
+dependencies = [
+ "bluer",
+ "env_logger",
+ "futures",
+ "tokio",
 ]
 
 [[package]]
