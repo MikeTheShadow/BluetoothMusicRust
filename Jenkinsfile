@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'cargo build --release'
+        sh '/home/jenkins/.cargo/bin/cargo build --release'
         archiveArtifacts artifacts: '**/target/release/BluetoothMusicRust', fingerprint: true
       }
     }
