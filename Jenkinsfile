@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh '/home/jenkins/.cargo/bin/cargo build --target=arm-none-linux-gnueabihf-gcc --release'
+        sh '/home/jenkins/.cargo/bin/cargo build --target=armv7-unknown-linux-gnueabihf --release'
         archiveArtifacts artifacts: '**/target/release/BluetoothMusicRust', fingerprint: true
       }
     }
