@@ -3,6 +3,9 @@ name = "BluetoothMusicRust"
 version = "0.1.0"
 edition = "2021"
 
+[target.armv7-unknown-linux-gnueabihf]
+linker = "arm-none-linux-gnueabihf-gcc"
+
 [dependencies]
 bluer = {version= "0.15.0", features=["full"]}
 futures = { version = "0.3.24", default-features = true }
