@@ -35,6 +35,8 @@ async fn main() -> bluer::Result<()> {
     for adapter_name in adapter_names {
         println!("Bluetooth adapater {}:", &adapter_name);
         let adapter = session.adapter(&adapter_name)?;
+        adapter.set_pairable(true);
+        adapter.set_discoverable(true);
         if all_properties {
             query_all_adapter_properties(&adapter).await?;
         } else {
