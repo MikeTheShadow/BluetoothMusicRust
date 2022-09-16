@@ -14,7 +14,7 @@ async fn main() -> bluer::Result<()> {
     env_logger::init();
     let session = bluer::Session::new().await?;
     let adapter = session.default_adapter().await?;
-    let test_adapter : Result<Adapter> = session.adapter("music-server-controller").await;
+    let test_adapter : Result<Adapter> = session.adapter("music-server-controller");
     if test_adapter.is_ok() {
         println!("Found it by name!");
     } else {
