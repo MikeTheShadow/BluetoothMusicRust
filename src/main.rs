@@ -43,7 +43,7 @@ async fn main() -> bluer::Result<()> {
     let agent:Agent = Agent {
         request_default: true,
         request_pin_code: Some(return_test()),
-        display_pin_code: Some(return_test()),
+        display_pin_code: Some(return_test_2()),
         request_passkey: None,
         display_passkey: None,
         request_confirmation: None,
