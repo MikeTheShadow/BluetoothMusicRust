@@ -2,12 +2,12 @@ extern crate core;
 
 use std::fs::read;
 use std::future::Future;
-use std::io::{BufRead, BufReader};
 use std::pin::Pin;
 use std::time::Duration;
 use bluer::AdapterEvent;
 use bluer::adv::Advertisement;
 use bluer::agent::{Agent, DisplayPinCode, DisplayPinCodeFn, ReqResult, RequestPinCode, RequestPinCodeFn};
+use tokio::io::{AsyncBufReadExt, BufReader};
 
 async fn query_adapter(adapter: &bluer::Adapter) -> bluer::Result<()> {
     println!("    Address:                    {}", adapter.address().await?);
