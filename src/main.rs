@@ -1,6 +1,5 @@
 extern crate core;
 
-use core::panicking::panic;
 use std::env;
 use std::fs::read;
 use std::future::Future;
