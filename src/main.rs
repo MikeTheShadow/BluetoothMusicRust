@@ -1,6 +1,5 @@
 extern crate core;
 
-use std::env;
 use std::fs::read;
 use std::future::Future;
 use std::io::{BufRead, BufReader};
