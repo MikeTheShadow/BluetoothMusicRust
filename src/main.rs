@@ -81,10 +81,10 @@ async fn main() -> bluer::Result<()> {
     Ok(())
 }
 
-fn return_test() -> Box<dyn (Fn(RequestPinCode) -> Pin<Box<dyn Future<Output = ReqResult<String>> + Send>>) + Send + Sync> {
+fn return_test() -> Box<dyn Fn(RequestPinCode) -> Pin<Box<(dyn Future<Output = Result<(), bluer::agent::ReqError>> + Send + 'static)>> + Send + Sync> {
     panic!("hey we're requesting a pin code!");
 }
 
-fn return_test_2() -> Box<dyn (Fn(DisplayPinCode) -> Pin<Box<dyn Future<Output = ReqResult<String>> + Send>>) + Send + Sync> {
+fn return_test_2() -> Box<dyn Fn(DisplayPinCode) -> Pin<Box<(dyn Future<Output = Result<(), bluer::agent::ReqError>> + Send + 'static)>> + Send + Sync> {
     panic!("hey we're displaying a pin code!");
 }
