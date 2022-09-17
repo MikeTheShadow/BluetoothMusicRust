@@ -2,7 +2,7 @@
 
 use bluer::adv::Advertisement;
 use std::time::Duration;
-use bluer::Adapter;
+use bluer::{Adapter, Uuid};
 use tokio::{
     io::{AsyncBufReadExt, BufReader},
     time::sleep,
@@ -17,6 +17,8 @@ async fn main() -> bluer::Result<()> {
     adapter.set_powered(true).await?;
 
     println!("Advertising on Bluetooth adapter {} with address {}", adapter.name(), adapter.address().await?);
+    let utest : Uuid = "00001108-0000-1000-8000-00805f9b34fb".parse().unwrap();
+    println!("UUID: {}",utest);
     let le_advertisement = Advertisement {
         advertisement_type: bluer::adv::Type::Peripheral,
         service_uuids: vec!["00001108-0000-1000-8000-00805f9b34fb".parse().unwrap(),"0000110d-0000-1000-8000-00805f9b34fb".parse().unwrap()].into_iter().collect(),
