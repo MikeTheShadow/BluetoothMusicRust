@@ -3,12 +3,12 @@ extern crate core;
 use std::fs::read;
 use std::future::Future;
 use std::pin::Pin;
-use std::thread::sleep;
 use std::time::Duration;
 use bluer::AdapterEvent;
 use bluer::adv::Advertisement;
 use bluer::agent::{Agent, DisplayPinCode, DisplayPinCodeFn, ReqResult, RequestPinCode, RequestPinCodeFn};
 use tokio::io::{AsyncBufReadExt, BufReader};
+use tokio::time::sleep;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> bluer::Result<()> {
