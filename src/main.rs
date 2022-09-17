@@ -12,7 +12,6 @@ use bluer::agent::{Agent, DisplayPinCode, ReqResult, RequestPinCode, RequestPinC
 
 async fn query_adapter(adapter: &bluer::Adapter) -> bluer::Result<()> {
     println!("    Address:                    {}", adapter.address().await?);
-    println!("    Address type:               {}", adapter.address_type()?);
     println!("    Friendly name:              {}", adapter.alias().await?);
     println!("    Modalias:                   {:?}", adapter.modalias().await?);
     println!("    Powered:                    {:?}", adapter.is_powered().await?);
