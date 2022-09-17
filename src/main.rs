@@ -48,7 +48,7 @@ async fn main() -> bluer::Result<()> {
 
     let display_pin_code: DisplayPinCodeFn = Box::new(|display_pin_code| Box::pin(async {
         println!("Hello from display pin code!");
-        println!("Data \nAdapter: {}\nDevice: {}\nCode: {}",&display_pin_code.adapter,&display_pin_code.device,&display_pin_code.pincode);
+        // println!("Data \nAdapter: {}\nDevice: {}\nCode: {}",&display_pin_code.adapter,&display_pin_code.device,&display_pin_code.pincode);
         return Ok(());
     }));
 
