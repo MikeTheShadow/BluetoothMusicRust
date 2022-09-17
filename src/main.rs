@@ -8,7 +8,7 @@ use std::pin::Pin;
 use std::time::Duration;
 use bluer::AdapterEvent;
 use bluer::adv::Advertisement;
-use bluer::agent::{Agent, DisplayPinCode, ReqResult, RequestPinCode, RequestPinCodeFn};
+use bluer::agent::{Agent, DisplayPinCode, DisplayPinCodeFn, ReqResult, RequestPinCode, RequestPinCodeFn};
 
 async fn query_adapter(adapter: &bluer::Adapter) -> bluer::Result<()> {
     println!("    Address:                    {}", adapter.address().await?);
@@ -22,7 +22,7 @@ async fn query_adapter(adapter: &bluer::Adapter) -> bluer::Result<()> {
     println!("    Active adv. instances:      {}", adapter.active_advertising_instances().await?);
     println!("    Supp.  adv. instances:      {}", adapter.supported_advertising_instances().await?);
     println!("    Supp.  adv. includes:       {:?}", adapter.supported_advertising_system_includes().await?);
-    println!("    Adv. capabilites:           {:?}", adapter.supported_advertising_capabilities().await?);
+    println!("    Adv. capabilities:           {:?}", adapter.supported_advertising_capabilities().await?);
     println!("    Adv. features:              {:?}", adapter.supported_advertising_features().await?);
 
     Ok(())
@@ -39,10 +39,24 @@ async fn query_all_adapter_properties(adapter: &bluer::Adapter) -> bluer::Result
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> bluer::Result<()> {
 
+    // pub type RequestPinCodeFn =
+    //     Box<dyn (Fn(RequestPinCode) -> Pin<Box<dyn Future<Output = ReqResult<String>> + Send>>) + Send + Sync>;
+
+    let request_pin_code: RequestPinCodeFn = Box::new(|request_pin_code| Box::pin(async {
+        println!("Hello from request pin code!");
+        return Ok(String::from("hello world"));
+    }));
+
+    let display_pin_code: DisplayPinCodeFn = Box::new(|display_pin_code| Box::pin(async {
+        println!("Hello from display pin code!");
+        println!("Data \nAdapter: {}\nDevice: {}\nCode: {}",display_pin_code.adapter,display_pin_code.device,display_pin_code.pincode);
+        return Ok(());
+    }));
+
     let agent:Agent = Agent {
         request_default: true,
-        request_pin_code: Some("test"),
-        display_pin_code: Some("test"),
+        request_pin_code: Some(request_pin_code),
+        display_pin_code: Some(display_pin_code),
         request_passkey: None,
         display_passkey: None,
         request_confirmation: None,
