@@ -1,8 +1,15 @@
+extern crate core;
+
+use core::panicking::panic;
 use std::env;
+use std::fs::read;
+use std::future::Future;
 use std::io::{BufRead, BufReader};
+use std::pin::Pin;
 use std::time::Duration;
 use bluer::AdapterEvent;
 use bluer::adv::Advertisement;
+use bluer::agent::{Agent, DisplayPinCode, ReqResult, RequestPinCode, RequestPinCodeFn};
 
 async fn query_adapter(adapter: &bluer::Adapter) -> bluer::Result<()> {
     println!("    Address:                    {}", adapter.address().await?);
@@ -33,16 +40,31 @@ async fn query_all_adapter_properties(adapter: &bluer::Adapter) -> bluer::Result
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> bluer::Result<()> {
-    let all_properties = env::args().any(|arg| arg == "--all-properties");
+
+    let agent:Agent = Agent {
+        request_default: true,
+        request_pin_code: Some(return_test()),
+        display_pin_code: Some(return_test()),
+        request_passkey: None,
+        display_passkey: None,
+        request_confirmation: None,
+        request_authorization: None,
+        authorize_service: None,
+        _non_exhaustive: ()
+    };
 
     let session = bluer::Session::new().await?;
+    session.register_agent(agent);
     let adapter_names = session.adapter_names().await?;
     for adapter_name in adapter_names {
         println!("Bluetooth adapter {}:", &adapter_name);
         let adapter = session.adapter(&adapter_name)?;
         let le_advertisement = Advertisement {
             advertisement_type: bluer::adv::Type::Peripheral,
-            service_uuids: vec!["123e4567-e89b-12d3-a456-426614174000".parse().unwrap()].into_iter().collect(),
+            service_uuids: vec![
+                "00001108-0000-1000-8000-00805f9b34fb".parse().unwrap()
+                ,"0000110d-0000-1000-8000-00805f9b34fb".parse().unwrap()
+            ].into_iter().collect(),
             discoverable: Some(true),
             local_name: Some("le_advertise".to_string()),
             ..Default::default()
@@ -51,14 +73,7 @@ async fn main() -> bluer::Result<()> {
         adapter.set_pairable(true);
         adapter.set_powered(true);
         let handle = adapter.advertise(le_advertisement).await?;
-
-
-
-        if all_properties {
-            query_all_adapter_properties(&adapter).await?;
-        } else {
-            query_adapter(&adapter).await?;
-        }
+        query_adapter(&adapter).await?;
         println!();
     }
     println!("Press enter to quit");
@@ -66,4 +81,12 @@ async fn main() -> bluer::Result<()> {
     let mut lines = stdin.lines();
     let _ = lines.next_line().await;
     Ok(())
+}
+
+fn return_test() -> Box<dyn (Fn(RequestPinCode) -> Pin<Box<dyn Future<Output = ReqResult<String>> + Send>>) + Send + Sync> {
+    panic!("hey we're requesting a pin code!");
+}
+
+fn return_test_2() -> Box<dyn (Fn(DisplayPinCode) -> Pin<Box<dyn Future<Output = ReqResult<String>> + Send>>) + Send + Sync> {
+    panic!("hey we're displaying a pin code!");
 }
