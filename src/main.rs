@@ -41,8 +41,8 @@ async fn main() -> bluer::Result<()> {
 
     let agent:Agent = Agent {
         request_default: true,
-        request_pin_code: Some(return_test()),
-        display_pin_code: Some(return_test_2()),
+        request_pin_code: Some("test"),
+        display_pin_code: Some("test"),
         request_passkey: None,
         display_passkey: None,
         request_confirmation: None,
@@ -79,12 +79,4 @@ async fn main() -> bluer::Result<()> {
     let mut lines = stdin.lines();
     let _ = lines.next_line().await;
     Ok(())
-}
-
-fn return_test() -> Box<dyn Fn(RequestPinCode) -> Pin<Box<(dyn Future<Output = Result<(), bluer::agent::ReqError>> + Send + 'static)>> + Send + Sync> {
-    panic!("hey we're requesting a pin code!");
-}
-
-fn return_test_2() -> Box<dyn Fn(DisplayPinCode) -> Pin<Box<(dyn Future<Output = Result<(), bluer::agent::ReqError>> + Send + 'static)>> + Send + Sync> {
-    panic!("hey we're displaying a pin code!");
 }
