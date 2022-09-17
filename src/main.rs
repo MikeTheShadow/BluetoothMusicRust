@@ -80,9 +80,6 @@ async fn main() -> bluer::Result<()> {
             local_name: Some("le_advertise".to_string()),
             ..Default::default()
         };
-        adapter.set_discoverable(true);
-        adapter.set_pairable(true);
-        adapter.set_powered(true);
         let handle = adapter.advertise(le_advertisement).await?;
         query_adapter(&adapter).await?;
         println!();
