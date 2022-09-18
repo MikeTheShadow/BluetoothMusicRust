@@ -14,23 +14,23 @@ use tokio::time::sleep;
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> bluer::Result<()> {
     let request_pin_code: RequestPinCodeFn = Box::new(|request_pin_code| Box::pin(async {
-        println!("Hello from request pin code!");
+        info!("Hello from request pin code!");
         Ok(String::from("secret pin"))
     }));
 
     let display_pin_code: DisplayPinCodeFn = Box::new(|display_pin_code| Box::pin(async {
-        println!("Hello from display pin code!");
+        info!("Hello from display pin code!");
         // println!("Data \nAdapter: {}\nDevice: {}\nCode: {}",&display_pin_code.adapter,&display_pin_code.device,&display_pin_code.pincode);
         Ok(())
     }));
 
     let request_pass_key: RequestPasskeyFn = Box::new(|request_pass_key| Box::pin(async {
-        println!("Hello from request pass key!");
+        info!("Hello from request pass key!");
         Ok(69420)
     }));
 
     let display_pass_key : DisplayPasskeyFn = Box::new(|display_pass_key| Box::pin(async {
-        println!("Hello from display pass key");
+        info!("Hello from display pass key");
         Ok(())
     }));
 
@@ -40,12 +40,12 @@ async fn main() -> bluer::Result<()> {
     }));
 
     let request_authorization : RequestAuthorizationFn = Box::new(|request_authorization| Box::pin(async {
-        println!("Hello from request authorization");
+        info!("Hello from request authorization");
         Ok(())
     }));
 
     let authorize_service : AuthorizeServiceFn = Box::new(|authorize_service| Box::pin(async {
-        println!("Hello from authorize service");
+        info!("Hello from authorize service");
         Ok(())
     }));
 
