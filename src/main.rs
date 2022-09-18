@@ -7,7 +7,7 @@ use std::pin::Pin;
 use std::time::Duration;
 use bluer::AdapterEvent;
 use bluer::adv::Advertisement;
-use bluer::agent::{Agent, DisplayPasskeyFn, DisplayPinCode, DisplayPinCodeFn, ReqResult, RequestPasskeyFn, RequestPinCode, RequestPinCodeFn};
+use bluer::agent::{Agent, AuthorizeServiceFn, DisplayPasskeyFn, DisplayPinCode, DisplayPinCodeFn, ReqResult, RequestAuthorizationFn, RequestConfirmation, RequestConfirmationFn, RequestPasskeyFn, RequestPinCode, RequestPinCodeFn};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::time::sleep;
 
@@ -34,15 +34,30 @@ async fn main() -> bluer::Result<()> {
         Ok(())
     }));
 
+    let request_confirmation : RequestConfirmationFn = Box::new(|request_confirmation| Box::pin(async {
+        println!("Hello from request confirmation");
+        Ok(())
+    }));
+
+    let request_authorization : RequestAuthorizationFn = Box::new(|request_authorization| Box::pin(async {
+        println!("Hello from request authorization");
+        Ok(())
+    }));
+
+    let authorize_service : AuthorizeServiceFn = Box::new(|authorize_service| Box::pin(async {
+        println!("Hello from authorize service");
+        Ok(())
+    }));
+
     let agent: Agent = Agent {
         request_default: true,
         request_pin_code: Some(request_pin_code),
         display_pin_code: Some(display_pin_code),
         request_passkey: Some(request_pass_key),
         display_passkey: Some(display_pass_key),
-        request_confirmation: None,
-        request_authorization: None,
-        authorize_service: None,
+        request_confirmation: Some(request_confirmation),
+        request_authorization: Some(request_authorization),
+        authorize_service: Some(authorize_service),
         _non_exhaustive: (),
     };
 
