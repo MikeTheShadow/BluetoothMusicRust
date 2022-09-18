@@ -47,7 +47,7 @@ async fn main() -> bluer::Result<()> {
     };
 
     let session = bluer::Session::new().await?;
-    session.register_agent(agent);
+    session.register_agent(agent).await?;
     // let adapter_names = session.adapter_names().await?; // Use this to get all adapters
     let adapter = session.default_adapter().await?;
     adapter.set_powered(true).await?;
