@@ -1,90 +1,59 @@
 extern crate core;
 
-use std::fs::read;
-use std::future::Future;
-use std::mem::transmute;
-use std::pin::Pin;
-use std::time::Duration;
-use bluer::AdapterEvent;
-use bluer::adv::Advertisement;
-use bluer::agent::{Agent, AuthorizeServiceFn, DisplayPasskeyFn, DisplayPinCode, DisplayPinCodeFn, ReqResult, RequestAuthorizationFn, RequestConfirmation, RequestConfirmationFn, RequestPasskeyFn, RequestPinCode, RequestPinCodeFn};
-use tokio::io::{AsyncBufReadExt, BufReader};
-use tokio::time::sleep;
+use std::env;
+use std::io::Write;
+use log::info;
+use rpi_led_panel::{RGBMatrix, RGBMatrixConfig};
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() -> bluer::Result<()> {
-    let request_pin_code: RequestPinCodeFn = Box::new(|request_pin_code| Box::pin(async {
-        info!("Hello from request pin code!");
-        Ok(String::from("secret pin"))
-    }));
+async fn main() {
+    env::set_var("RUST_LOG", "info");
+    let config: RGBMatrixConfig = argh::from_env();
+    pretty_env_logger::init_timed();
+    info!("Started!");
+    let rows = 8;
+    let cols = 32;
+    let (mut matrix, mut canvas) = RGBMatrix::new(config, 0);
 
-    let display_pin_code: DisplayPinCodeFn = Box::new(|display_pin_code| Box::pin(async {
-        info!("Hello from display pin code!");
-        // println!("Data \nAdapter: {}\nDevice: {}\nCode: {}",&display_pin_code.adapter,&display_pin_code.device,&display_pin_code.pincode);
-        Ok(())
-    }));
+    let [center_x, center_y] = [cols / 2, rows / 2];
 
-    let request_pass_key: RequestPasskeyFn = Box::new(|request_pass_key| Box::pin(async {
-        info!("Hello from request pass key!");
-        Ok(69420)
-    }));
+    let rotate_square = (rows.min(cols) as f64 * 1.41) as isize;
+    let min_rotate = center_x - rotate_square / 2;
+    let max_rotate = center_x + rotate_square / 2;
 
-    let display_pass_key : DisplayPasskeyFn = Box::new(|display_pass_key| Box::pin(async {
-        info!("Hello from display pass key");
-        Ok(())
-    }));
+    let display_square = (rows.min(cols) as f64 * 0.7) as isize;
+    let min_display = center_x - display_square / 2;
+    let max_display = center_x + display_square / 2;
 
-    let request_confirmation : RequestConfirmationFn = Box::new(|request_confirmation| Box::pin(async {
-        println!("Hello from request confirmation");
-        Ok(())
-    }));
+    for step in 0.. {
+        let rotation_deg = step as f64 / 2.0;
+        for x in min_rotate..max_rotate {
+            for y in min_rotate..max_rotate {
+                let [rot_x, rot_y] =
+                    rotate([x - center_x, y - center_x], rotation_deg.to_radians());
+                let canvas_x = rot_x + center_x as f64;
+                let canvas_y = rot_y + center_y as f64;
+                if (min_display..max_display).contains(&x)
+                    && (min_display..max_display).contains(&y)
+                {
+                    canvas.set_pixel(
+                        canvas_x as usize,
+                        canvas_y as usize,
+                        scale_col(x, min_display, max_display),
+                        255 - scale_col(y, min_display, max_display),
+                        scale_col(y, min_display, max_display),
+                    )
+                } else {
+                    canvas.set_pixel(canvas_x as usize, canvas_y as usize, 0, 0, 0)
+                }
+            }
+        }
 
-    let request_authorization : RequestAuthorizationFn = Box::new(|request_authorization| Box::pin(async {
-        info!("Hello from request authorization");
-        Ok(())
-    }));
+        canvas = matrix.update_on_vsync(canvas);
 
-    let authorize_service : AuthorizeServiceFn = Box::new(|authorize_service| Box::pin(async {
-        info!("Hello from authorize service");
-        Ok(())
-    }));
-
-    let agent: Agent = Agent {
-        request_default: true,
-        request_pin_code: Some(request_pin_code),
-        display_pin_code: Some(display_pin_code),
-        request_passkey: Some(request_pass_key),
-        display_passkey: Some(display_pass_key),
-        request_confirmation: Some(request_confirmation),
-        request_authorization: Some(request_authorization),
-        authorize_service: Some(authorize_service),
-        _non_exhaustive: (),
-    };
-
-    let session = bluer::Session::new().await?;
-    session.register_agent(agent).await?;
-    // let adapter_names = session.adapter_names().await?; // Use this to get all adapters
-    let adapter = session.default_adapter().await?;
-    adapter.set_powered(true).await?;
-    adapter.set_pairable(true).await?;
-    println!("Advertising on Bluetooth adapter {} with address {}", adapter.name(), adapter.address().await?);
-    let le_advertisement = Advertisement {
-        advertisement_type: bluer::adv::Type::Peripheral,
-        service_uuids: vec!["123e4567-e89b-12d3-a456-426614174000".parse().unwrap()].into_iter().collect(),
-        discoverable: Some(true),
-        local_name: Some("Music Server Phone Pair".to_string()),
-        ..Default::default()
-    };
-    println!("{:?}", &le_advertisement);
-    let handle = adapter.advertise(le_advertisement).await?;
-
-    println!("Press enter to quit");
-    let stdin = BufReader::new(tokio::io::stdin());
-    let mut lines = stdin.lines();
-    let _ = lines.next_line().await;
-
-    println!("Removing advertisement");
-    drop(handle);
-    sleep(Duration::from_secs(1)).await;
-    Ok(())
+        if step % 120 == 0 {
+            print!("\r{:>100}\rFramerate: {}", "", matrix.get_framerate());
+            std::io::stdout().flush().unwrap();
+        }
+    }
 }
