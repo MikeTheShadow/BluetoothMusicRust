@@ -1,6 +1,4 @@
-// Convert panel bits into their SPI counterparts
-// 0 -> 001
-// 1 -> 011
+
 pub fn byte_to_spi_bytes(input: u8) -> [u8; 3] {
     // first convert the u8 to 24 bits
     let mut bool_array = [false; 24];
