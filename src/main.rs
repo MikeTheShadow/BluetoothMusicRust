@@ -28,5 +28,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     panel.set_leds(&leds);
 
+    thread::sleep(Duration::from_secs(5));
+
     Ok(())
 }
