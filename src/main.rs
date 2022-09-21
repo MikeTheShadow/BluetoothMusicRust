@@ -1,3 +1,5 @@
+mod lib;
+
 extern crate core;
 
 use std::{env, thread};
@@ -9,21 +11,22 @@ use rppal::i2c::I2c;
 use rppal::pwm::{Channel, Polarity, Pwm};
 use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
 use rppal::uart::{Parity, Uart};
+use bluetooth_music_rust::LedPanel;
+use crate::lib::ColorRGB;
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn Error>> {
     env::set_var("RUST_LOG", "info");
     pretty_env_logger::init_timed();
     info!("Started!");
-    // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    let pwm = Pwm::with_frequency(Channel::Pwm0, 400.0, 0.66, Polarity::Normal, true).unwrap();
 
-    // Sleep for 2 seconds while the LED blinks.
-    thread::sleep(Duration::from_secs(2));
+    let mut panel: LedPanel = LedPanel::new(8 * 32);
 
-    // Reconfigure the PWM channel for an 8 Hz frequency, 50% duty cycle.
-    pwm.set_frequency(8.0, 0.5)?;
+    panel.clear_all_leds();
 
-    thread::sleep(Duration::from_secs(3));
+    let leds : [ColorRGB; 1] = [ColorRGB::new(5, 5, 5)];
+
+    panel.set_leds(&leds);
+
     Ok(())
 }
