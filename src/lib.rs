@@ -4,7 +4,7 @@ use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
 pub struct LedPanel {
     /// stores [g, r, b] for each led (as opposed to the normal RGB)
     buffer: Vec<u8>,
-    spi: Spi,
+    pub spi: Spi,
     num_leds: u32,
 }
 
