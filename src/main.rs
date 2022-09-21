@@ -11,7 +11,7 @@ use rppal::i2c::I2c;
 use rppal::pwm::{Channel, Polarity, Pwm};
 use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
 use rppal::uart::{Parity, Uart};
-use bluetooth_music_rust::LedPanel;
+use bluetooth_music_rust::{ColorRGB, LedPanel};
 
 #[tokio::main(flavor = "current_thread")]
 async fn main() -> Result<(), Box<dyn Error>> {
