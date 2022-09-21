@@ -1,6 +1,7 @@
 extern crate core;
 
 use std::{env, thread};
+use std::error::Error;
 use std::time::Duration;
 use log::info;
 use rppal::gpio::Gpio;
@@ -10,7 +11,7 @@ use rppal::spi::{Bus, Mode, SlaveSelect, Spi};
 use rppal::uart::{Parity, Uart};
 
 #[tokio::main(flavor = "current_thread")]
-async fn main() {
+async fn main() -> Result<(), Box<dyn Error>> {
     env::set_var("RUST_LOG", "info");
     pretty_env_logger::init_timed();
     info!("Started!");
@@ -24,5 +25,5 @@ async fn main() {
     pwm.set_frequency(8.0, 0.5)?;
 
     thread::sleep(Duration::from_secs(3));
-
+    Ok(())
 }
