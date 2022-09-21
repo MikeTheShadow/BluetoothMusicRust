@@ -29,5 +29,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     thread::sleep(Duration::from_secs(5));
 
+    panel.clear_all_leds();
+
     Ok(())
 }
