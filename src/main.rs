@@ -19,9 +19,11 @@ async fn main() -> Result<(), Box<dyn Error>> {
     pretty_env_logger::init_timed();
     info!("Started!");
 
-    let buffer = Vec::new();
+    let mut buffer = Vec::new();
 
     let mut panel:  LedPanel =  LedPanel::new(256);
+
+    buffer.append(&mut vec![255,0,0]);
 
     panel.spi.write(&buffer).expect("panic message");
 
