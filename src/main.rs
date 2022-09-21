@@ -10,5 +10,5 @@ async fn main() {
     pretty_env_logger::init_timed();
     info!("Started!");
 
-    let pi_peripheral : Pwm = Pwm::new(Channel::Pwm0).unwrap()?;
+    let pi_peripheral : Pwm = Pwm::new(Channel::Pwm0).unwrap();
 }
