@@ -24,9 +24,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     panel.clear_all_leds();
 
-    let leds : [ColorRGB; 1] = [ColorRGB::new(5, 5, 5)];
+    let leds : &[ColorRGB; 1] = &[ColorRGB(5, 5, 5)];
 
-    panel.set_leds(&leds);
+    panel.set_leds(leds);
 
     thread::sleep(Duration::from_secs(5));
 
