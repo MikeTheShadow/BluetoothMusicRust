@@ -23,7 +23,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     panel.clear_all_leds();
 
-    let leds : &[ColorRGB; 1] = &[ColorRGB(5, 5, 5)];
+    let leds : &[ColorRGB; 8] = &[ColorRGB(255, 0, 0),ColorRGB(255, 0, 0),ColorRGB(255, 0, 0),ColorRGB(255, 0, 0),ColorRGB(255, 0, 0),ColorRGB(255, 0, 0),ColorRGB(255, 0, 0),ColorRGB(255, 0, 0)];
 
     panel.set_leds(&leds[..]);
 
