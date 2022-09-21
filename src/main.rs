@@ -16,7 +16,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     pretty_env_logger::init_timed();
     info!("Started!");
     // Enable PWM channel 0 (BCM GPIO 18, physical pin 12) at 2 Hz with a 25% duty cycle.
-    let pwm = Pwm::with_frequency(Channel::Pwm0, 400.0, 0.25, Polarity::Normal, true).unwrap();
+    let pwm = Pwm::with_frequency(Channel::Pwm0, 400.0, 0.33, Polarity::Normal, true).unwrap();
 
     // Sleep for 2 seconds while the LED blinks.
     thread::sleep(Duration::from_secs(2));
